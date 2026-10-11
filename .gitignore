@@ -218,3 +218,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# 產生的影片與比賽紀錄
+*.mp4
+*.ass
+match*.json

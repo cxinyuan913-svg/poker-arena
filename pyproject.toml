@@ -1,0 +1,12 @@
+[project]
+name = "poker-arena"
+version = "0.0.1"
+description = "AI 德州撲克對戰場與自動轉播影片"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
