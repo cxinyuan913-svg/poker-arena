@@ -9,7 +9,7 @@
 ## 路線圖
 
 - **階段 0：基礎**（已完成）— Card / Deck、7 選 5 牌型判斷與比牌、蒙地卡羅勝率計算、測試。
-- **階段 1：遊戲引擎與 4 種機器人** — 緊兇、鬆凶、跟注站、機率派。每個決策都要記錄「內心話」。
+- **階段 1：遊戲引擎與 4 種機器人**（已完成）— 緊兇、鬆凶、跟注站、機率派。每個決策都要記錄「內心話」。
 - **階段 2：影片產生器** — 底牌視角、即時勝率條、內心話字幕。
 - **階段 3：精華剪輯與進化系統。**
 
@@ -18,7 +18,15 @@
 - `poker_arena/cards.py` — `Card`（rank 2..14，suit `s/h/d/c`）、`parse_cards("As Kd")`、`Deck(seed=..., exclude=...)`
 - `poker_arena/evaluator.py` — `evaluate_five`、`best_hand`（5~7 張選最佳 5 張）、`find_winners`（回傳贏家索引，多人即平手分池）；`HandRank` 可直接比較大小
 - `poker_arena/equity.py` — `calculate_equity(hole_cards, board, iterations, seed)` 回傳每位玩家的 `EquityResult(win, tie)`
+- `poker_arena/engine.py` — 無限注引擎：`play_hand`、`play_match`。機器人實作 `decide(GameView) -> Decision(action, amount, thought)`；不合法決策會被修正成最接近的合法行動。每手牌產生事件列表（`hand_start`/`blind`/`deal`/`action`/`board`/`showdown`/`refund`/`award`/`hand_end`），`action` 事件含 `thought`（內心話）。RAISE 的 amount 是「加注到」的總額
+- `poker_arena/bots.py` — 老岩（緊兇）、狂人（鬆凶）、阿跟（跟注站）、教授（機率派）；`default_lineup(seed)`
+- `poker_arena/__main__.py` — `python -m poker_arena --hands 20 --seed 1 --json match.json` 文字轉播並輸出事件 JSON
 - `tests/` — pytest，執行：`python -m pytest`
+
+### 引擎的簡化規則
+- 不燒牌；不足額的全下加注也會重新開放加注
+- 奇數籌碼給按鈕左手邊最近的贏家
+- 機器人用 `equity_vs_random`（對手為隨機底牌）估算自己的勝率
 
 ## 程式慣例
 

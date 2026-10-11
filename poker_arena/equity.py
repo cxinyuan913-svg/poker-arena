@@ -51,3 +51,31 @@ def calculate_equity(
                 ties[i] += 1
 
     return [EquityResult(w / iterations, t / iterations) for w, t in zip(wins, ties)]
+
+
+def equity_vs_random(
+    hole: Sequence[Card],
+    board: Sequence[Card],
+    num_opponents: int,
+    iterations: int,
+    rng: random.Random,
+) -> float:
+    """自己對上 num_opponents 位隨機底牌對手的權益（勝 + 平手按人數分）。
+
+    機器人看不到對手底牌時用這個估計自己的牌力。
+    """
+    if num_opponents < 1:
+        raise ValueError("need at least 1 opponent")
+    known = set(hole) | set(board)
+    remaining = [c for c in full_deck() if c not in known]
+    missing = 5 - len(board)
+    need = missing + 2 * num_opponents
+    total = 0.0
+    for _ in range(iterations):
+        drawn = rng.sample(remaining, need)
+        full_board = [*board, *drawn[:missing]]
+        opponents = [drawn[missing + 2 * k: missing + 2 * k + 2] for k in range(num_opponents)]
+        winners = find_winners([list(hole), *opponents], full_board)
+        if 0 in winners:
+            total += 1 / len(winners)
+    return total / iterations

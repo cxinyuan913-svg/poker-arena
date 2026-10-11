@@ -55,6 +55,13 @@ class Deck:
         self._cards: list[Card] = [c for c in full_deck() if c not in excluded]
         self._rng.shuffle(self._cards)
 
+    @classmethod
+    def stacked(cls, cards: Iterable[Card]) -> Deck:
+        """依指定順序發牌的牌組（測試與重播用）。"""
+        deck = cls(seed=0)
+        deck._cards = list(cards)
+        return deck
+
     def __len__(self) -> int:
         return len(self._cards)
 
@@ -64,3 +71,11 @@ class Deck:
         drawn = self._cards[:n]
         del self._cards[:n]
         return drawn
+
+
+SUIT_SYMBOLS = {"s": "♠", "h": "♥", "d": "♦", "c": "♣"}
+
+
+def pretty(cards: Iterable[Card]) -> str:
+    """以花色符號顯示，例如 'A♠ K♦'。"""
+    return " ".join(f"{RANKS[c.rank - 2]}{SUIT_SYMBOLS[c.suit]}" for c in cards)
