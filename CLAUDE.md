@@ -11,7 +11,7 @@
 - **階段 0：基礎**（已完成）— Card / Deck、7 選 5 牌型判斷與比牌、蒙地卡羅勝率計算、測試。
 - **階段 1：遊戲引擎與 4 種機器人**（已完成）— 緊兇、鬆凶、跟注站、機率派。每個決策都要記錄「內心話」。
 - **階段 2：影片產生器**（已完成）— 底牌視角、即時勝率條、內心話字幕。
-- **階段 3：精華剪輯與進化系統。**
+- **階段 3：精華剪輯與進化系統**（已完成）
 
 ## 目前結構
 
@@ -22,6 +22,8 @@
 - `poker_arena/bots.py` — 老岩（緊兇）、狂人（鬆凶）、阿跟（跟注站）、教授（機率派）；`default_lineup(seed)`
 - `poker_arena/__main__.py` — `python -m poker_arena --hands 20 --seed 1 --json match.json` 文字轉播並輸出事件 JSON
 - `poker_arena/video.py` — 事件 → `build_scenes`（每個場景含真實勝率，用 `calculate_equity` 以所有人的底牌計算）→ `scenes_to_ass`（ASS 字幕腳本畫出牌桌、底牌、勝率條、內心話）→ `render_video`（呼叫系統 ffmpeg + libass 輸出 MP4）。`python -m poker_arena.video --seed 1 --hand 0 1 --out hand.mp4`
+- `poker_arena/highlights.py` — `score_hand` 依底池、全下、逆轉（贏家最低勝率）、爆冷（輸家最高勝率）、詐唬成功評分；`pick_highlights` + `build_reel` 剪成精華影片。`python -m poker_arena.highlights --seed 1 --top 3 --out highlights.mp4`
+- `poker_arena/evolve.py` — `Genome`（入池/加注門檻、價值勝率、下注大小、詐唬率、跟注餘裕）+ `EvolvedBot`；`evolve()` 以 4 人桌淨贏籌碼為適應度，菁英保留 + 交配 + 突變。`python -m poker_arena.evolve --generations 6 --population 8`
 - `tests/` — pytest，執行：`python -m pytest`
 
 ### 外部工具
